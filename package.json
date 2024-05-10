@@ -1,0 +1,10 @@
+{
+  "name": "cf_fsi_ach3_client_myflixapp",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anderson",
+  "license": "ISC",
+  "description": ""
+}
