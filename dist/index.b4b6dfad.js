@@ -27393,7 +27393,7 @@ const MainView = ()=>{
         fetch("https://andersonmovie-fda719d938ac.herokuapp.com/movies").then((response)=>response.json()).then((data)=>{
             const moviesFromApi = data.map((rowData)=>{
                 return {
-                    id: rowData._id.$oid,
+                    id: rowData._id,
                     title: rowData.Title,
                     image: rowData.ImagePath,
                     genre: rowData.Genre.Name
@@ -27404,36 +27404,66 @@ const MainView = ()=>{
         });
     }, []);
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
-    if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
-        movieData: selectedMovie,
-        onBackClick: ()=>setSelectedMovie(null)
-    }, void 0, false, {
-        fileName: "src/components/MainView/MainView.jsx",
-        lineNumber: 29,
-        columnNumber: 12
-    }, undefined);
+    if (selectedMovie) {
+        let similarMovies = movies.filter(checkGenre);
+        function checkGenre(movies) {
+            return movies.genre === selectedMovie.genre && movies.id !== selectedMovie.id;
+        }
+        console.log(similarMovies);
+        return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
+                    movieData: selectedMovie,
+                    onBackClick: ()=>setSelectedMovie(null)
+                }, void 0, false, {
+                    fileName: "src/components/MainView/MainView.jsx",
+                    lineNumber: 38,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("hr", {}, void 0, false, {
+                    fileName: "src/components/MainView/MainView.jsx",
+                    lineNumber: 39,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                    children: "Similar Movies"
+                }, void 0, false, {
+                    fileName: "src/components/MainView/MainView.jsx",
+                    lineNumber: 40,
+                    columnNumber: 9
+                }, undefined),
+                similarMovies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        children: movie.title
+                    }, movie.id, false, {
+                        fileName: "src/components/MainView/MainView.jsx",
+                        lineNumber: 41,
+                        columnNumber: 39
+                    }, undefined))
+            ]
+        }, void 0, true);
+    }
     if (movies.length === 0) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: "The list is empty!"
     }, void 0, false, {
         fileName: "src/components/MainView/MainView.jsx",
-        lineNumber: 33,
+        lineNumber: 47,
         columnNumber: 12
     }, undefined);
     else return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: movies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
                 movieData: movie,
                 onMovieClick: (newSelectedMovie)=>{
-                    console.log(newSelectedMovie);
+                    // console.log(newSelectedMovie);
                     setSelectedMovie(newSelectedMovie);
                 }
             }, movie.id, false, {
                 fileName: "src/components/MainView/MainView.jsx",
-                lineNumber: 38,
+                lineNumber: 52,
                 columnNumber: 9
             }, undefined))
     }, void 0, false, {
         fileName: "src/components/MainView/MainView.jsx",
-        lineNumber: 36,
+        lineNumber: 50,
         columnNumber: 5
     }, undefined);
 };
@@ -28281,7 +28311,7 @@ var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _propTypes = require("prop-types");
 var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
 const MovieView = ({ movieData, onBackClick })=>{
-    console.log(movieData); // print movie data
+    // console.log(movieData); // print movie data
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {

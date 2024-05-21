@@ -13,7 +13,7 @@ export const MainView = () => {
     .then((data) => {
       const moviesFromApi = data.map((rowData) => {
         return {
-          id: rowData._id.$oid,
+          id: rowData._id,
           title: rowData.Title,
           image: rowData.ImagePath,
           genre: rowData.Genre.Name
@@ -26,7 +26,21 @@ export const MainView = () => {
 
   const [ selectedMovie, setSelectedMovie ] = useState(null);
   if (selectedMovie) {
-    return <MovieView movieData={selectedMovie} onBackClick={()=>setSelectedMovie(null)} />
+    let similarMovies = movies.filter(checkGenre);
+    function checkGenre(movies) {
+      return movies.genre === selectedMovie.genre
+      && movies.id !== selectedMovie.id;
+    }
+    console.log(similarMovies);
+
+    return (
+      <>
+        <MovieView movieData={selectedMovie} onBackClick={()=>setSelectedMovie(null)} />
+        <hr />
+        <h2>Similar Movies</h2>
+        {similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)}
+      </>
+    )
   }
 
   if (movies.length === 0) {
@@ -37,7 +51,7 @@ export const MainView = () => {
       {movies.map((movie) => (
         <MovieCard key={movie.id} movieData={movie}
         onMovieClick = {(newSelectedMovie) => {
-          console.log(newSelectedMovie);
+          // console.log(newSelectedMovie);
           setSelectedMovie(newSelectedMovie);
         }}
         />

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 export const MovieView = ({ movieData, onBackClick }) => {
-  console.log(movieData); // print movie data
+  // console.log(movieData); // print movie data
   return (
     <div>
       <div>
