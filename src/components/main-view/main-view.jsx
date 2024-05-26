@@ -69,7 +69,16 @@ export const MainView = () => {
   }
 
   if (movies.length === 0) {
-    return <div>The list is empty!</div>
+    return (
+    <div>The list is empty!
+      <button
+      onClick={() => { 
+        setUser(null);
+        setToken(null);
+        localStorage.clear();
+      }}>Logout</button>
+      </div>
+      )
   } else {
     return (
     <div>
