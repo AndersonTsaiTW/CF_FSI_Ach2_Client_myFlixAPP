@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { Container, Row, Col, Card, CardGroup, Form, Button } from "react-bootstrap";
 
-export const LoginView = ({onLoggedIn}) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+
+export const LoginView = ({ onLoggedIn }) => {
+  const [username, setUsername] = useState("AndersonTsai");
+  const [password, setPassword] = useState("pass666");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,45 +21,51 @@ export const LoginView = ({onLoggedIn}) => {
       },
       body: JSON.stringify(data)
     })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Login response: ", data);
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", JSON.stringify(data.token));
-        onLoggedIn(data.user, data.token);
-      } else {
-        alert("No such user");
-      }
-    })
-    .catch((e) => {
-      console.error("Login error: ", e);
-      alert("Something went wrong");
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Login response: ", data);
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", JSON.stringify(data.token));
+          onLoggedIn(data.user, data.token);
+        } else {
+          alert("No such user");
+        }
+      })
+      .catch((e) => {
+        console.error("Login error: ", e);
+        alert("Something went wrong");
+      });
   }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input
-        type="text"
-        minlength = "4"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-        />
-      </label>
-      <label>
-        Password:
-        <input
-        type="password"
-        minlength = "4"
-        value = {password}
-        onChange = {(e) => setPassword(e.target.value)}
-        required
-        />
-      </label>
-      <button type="submit">Login</button>
-    </form>
+      <Card style={{ height: '300px'}}>
+        <Card.Header className="card-header">Login to see the lovely movies!</Card.Header>
+        <Form className="form-container" onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label>Username:</Form.Label>
+            <Form.Control
+              type="text"
+              minlength="4"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="password"
+              minlength="4"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Button type="submit">Login</Button>
+        </Form>
+      </Card>
+
   )
 }
