@@ -1,5 +1,24 @@
+@import "~bootstrap/scss/bootstrap.scss";
+
 $color: steelblue;
 
 .my-flix {
   color: $color;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;  // make sure it will cover 100% og the height
+}
+
+.card-header {
+  color: #01949A;
+  font-weight: bold;
+}
+
+.movie-view-image {
+  width: 300px;
+  height: auto;
 }
