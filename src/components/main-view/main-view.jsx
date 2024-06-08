@@ -8,6 +8,7 @@ import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { ProfileView } from "../profile-view/profile-view";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -15,6 +16,12 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
+
+  const logOut = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
 
   useEffect(() => {
     if (!token) {
@@ -43,11 +50,7 @@ export const MainView = () => {
     <BrowserRouter>
       <NavigationBar
         user={user}
-        onLoggedOut={() => {
-          setUser(null);
-          setToken(null);
-          localStorage.clear();
-        }} />
+        onLoggedOut={logOut} />
       <Row>
         <Routes>
           <Route path="/signup" element={
@@ -55,7 +58,7 @@ export const MainView = () => {
               {user ? (
                 <Navigate to="/" />
               ) : (
-                <Col className="form-container" md={8} lg={6}>
+                <Col className="form-container">
                   <SignupView />
                 </Col>
               )}
@@ -67,11 +70,29 @@ export const MainView = () => {
               {user ? (
                 <Navigate to="/" />
               ) : (
-                <Col className="form-container" md={8} lg={6}>
+                <Col className="form-container">
                   <LoginView onLoggedIn={(user, token) => {
                     setUser(user);
                     setToken(token);
                   }} />
+                </Col>
+              )}
+            </>
+          } />
+
+          <Route path="/profile" element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : (
+                <Col className="form-container">
+                  <ProfileView user={user} token={token}
+                    accountDeleted={logOut}
+                    movies={movies}
+                    onUpdate={(user) => {
+                      setUser(user);
+                    }}
+                  />
                 </Col>
               )}
             </>
@@ -85,7 +106,12 @@ export const MainView = () => {
                 <Col>The list is empty!</Col>
               ) : (
                 <Col>
-                  <MovieView movieData={movies} />
+                  <MovieView
+                    user={user}
+                    token={token}
+                    movieData={movies}
+                    onUpdateFav={(user) => { setUser(user); }}
+                  />
                 </Col>
               )}
             </>
@@ -100,18 +126,16 @@ export const MainView = () => {
               ) : (
                 <Row className="justify-content-center">
                   {movies.map((movie) => (
-                    <Col md={2} className="m-1 p-1 rounded">
-                      <MovieCard movieData={movie} key={movie.id}
+                    <Col md={2} className="m-1 p-1 rounded" key={movie.id}>
+                      <MovieCard
+                        user={user}
+                        token={token}
+                        movieData={movie}
+                        oriFavorite={user.FavMovies.includes(movie.id)}
+                        onUpdateFav={(user) => { setUser(user); }}
                       />
                     </Col>
                   ))}
-
-                  {/* <Button
-                    onClick={() => {
-                      setUser(null);
-                      setToken(null);
-                      localStorage.clear();
-                    }}>Logout</Button> */}
                 </Row>
               )}
             </>
