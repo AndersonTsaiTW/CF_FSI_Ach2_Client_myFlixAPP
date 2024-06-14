@@ -1,11 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { ProfileView } from "../profile-view/profile-view";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -13,7 +16,12 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const logOut = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
 
   useEffect(() => {
     if (!token) {
@@ -38,76 +46,104 @@ export const MainView = () => {
       });
   }, [token]);
 
-  const similarMovies = useMemo(() => {
-    if (!selectedMovie) return [];
-
-    return movies.filter(movie => movie.genre === selectedMovie.genre
-      && movie.id !== selectedMovie.id);
-  }, [movies, selectedMovie]);
-
   return (
-    <Row>
-      {!user ? (
-        <Row className="form-container justify-content-center align-items-center">
-          <Col className="form-container" md={8} lg={6}>
-            <LoginView onLoggedIn={(user, token) => {
-              setUser(user);
-              setToken(token);
-            }} />
-          </Col>
-          <Col md={8} lg={6}>
-            <br></br>
-            <span style={{ fontSize: '24px', color: '#007bff' }}>or </span>
-            <span style={{ fontSize: '24px', color: '#ff5c5c' }}> Create Your Account NOW!!!</span>
-            <br></br>
-            <br></br>
-          </Col>
-          <Col className="form-container" md={8} lg={6}>
-            <SignupView />
-          </Col>
-        </Row>
-      ) : selectedMovie ? (
-        <Col>
-          <MovieView movieData={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
-          <hr />
-          <h2>Similar Movies</h2>
-          {similarMovies.length > 0 ? (
-            similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
-          ) : (
-            <Col>There is no similar movie.</Col>
-          )}
-        </Col>
-      ) : (movies.length === 0) ? (
-        <Col>The list is empty!
-          <Button onClick={() => {
-            setUser(null);
-            setToken(null);
-            localStorage.clear();
-          }}>Logout</Button>
-        </Col>
-      ) : (
-        <Row className="justify-content-center">
-          {movies.map((movie) => (
+    <BrowserRouter>
+      <NavigationBar
+        user={user}
+        onLoggedOut={logOut} />
+      <Row>
+        <Routes>
+          <Route path="/signup" element={
+            <>
+              {user ? (
+                <Navigate to="/" />
+              ) : (
+                <Col className="form-container">
+                  <SignupView />
+                </Col>
+              )}
+            </>
+          } />
 
-            <Col md={2} className="m-1 p-1 rounded">
-              <MovieCard movieData={movie} key={movie.id}
-                onMovieClick={(newSelectedMovie) => {
-                  // console.log(newSelectedMovie);
-                  setSelectedMovie(newSelectedMovie);
-                }}
-              />
-            </Col>
+          <Route path="/login" element={
+            <>
+              {user ? (
+                <Navigate to="/" />
+              ) : (
+                <Col className="form-container">
+                  <LoginView onLoggedIn={(user, token) => {
+                    setUser(user);
+                    setToken(token);
+                  }} />
+                </Col>
+              )}
+            </>
+          } />
 
-          ))}
+          <Route path="/profile" element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : (
+                <Col className="form-container">
+                  <ProfileView user={user} token={token}
+                    accountDeleted={logOut}
+                    movies={movies}
+                    onUpdate={(user) => {
+                      setUser(user);
+                    }}
+                  />
+                </Col>
+              )}
+            </>
+          } />
 
-          <Button
-            onClick={() => {
-              setUser(null);
-              setToken(null);
-              localStorage.clear();
-            }}>Logout</Button>
-        </Row>
-      )}
-    </Row>
+          <Route path="movies/:movieId" element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : (movies.length === 0) ? (
+                <Col>The list is empty!</Col>
+              ) : (
+                <Col>
+                  <MovieView
+                    user={user}
+                    token={token}
+                    movieData={movies}
+                    onUpdateFav={(user) => { setUser(user); }}
+                  />
+                </Col>
+              )}
+            </>
+          } />
+
+          <Route path="/" element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : (movies.length === 0) ? (
+                <Col>The list is empty!</Col>
+              ) : (
+                <Row className="justify-content-center">
+                  {movies.map((movie) => (
+                    <Col md={2} className="m-1 p-1 rounded" key={movie.id}>
+                      <MovieCard
+                        user={user}
+                        token={token}
+                        movieData={movie}
+                        oriFavorite={user.FavMovies.includes(movie.id)}
+                        onUpdateFav={(user) => { setUser(user); }}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              )}
+            </>
+          } />
+
+        </Routes>
+      </Row>
+    </BrowserRouter>
+
   )
 }

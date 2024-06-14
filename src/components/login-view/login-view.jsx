@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardGroup, Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 
 export const LoginView = ({ onLoggedIn }) => {
@@ -39,7 +40,8 @@ export const LoginView = ({ onLoggedIn }) => {
   }
 
   return (
-      <Card style={{ height: '300px'}}>
+    <Container style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
+      <Card style={{ height: '300px' }}>
         <Card.Header className="card-header">Login to see the lovely movies!</Card.Header>
         <Form className="form-container" onSubmit={handleSubmit}>
           <Form.Group>
@@ -66,6 +68,6 @@ export const LoginView = ({ onLoggedIn }) => {
           <Button type="submit">Login</Button>
         </Form>
       </Card>
-
+    </Container>
   )
 }
