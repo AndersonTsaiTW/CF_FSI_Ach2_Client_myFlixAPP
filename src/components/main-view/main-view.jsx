@@ -10,6 +10,8 @@ import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 
+import { getAllMoviesApi } from "../../api/get-all-movies-api";
+
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = JSON.parse(localStorage.getItem("token"));
@@ -28,11 +30,9 @@ export const MainView = () => {
       return;
     }
 
-    fetch("https://andersonmovie-fda719d938ac.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    getAllMoviesApi(
+      token,
+      (data) => {
         const moviesFromApi = data.map((rowData) => {
           return {
             id: rowData._id,
@@ -43,7 +43,8 @@ export const MainView = () => {
         });
         console.log(moviesFromApi);
         setMovies(moviesFromApi);
-      });
+      }
+    )
   }, [token]);
 
   return (

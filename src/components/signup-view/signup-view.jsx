@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
+import { signupUserApi } from "../../api/signup-user-api";
 
 export const SignupView = () => {
   const [username, setUsername] = useState("AndersonTsai");
@@ -10,29 +11,21 @@ export const SignupView = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birth_date: birthday
-    };
-
-    fetch("https://andersonmovie-fda719d938ac.herokuapp.com/users", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
+    signupUserApi(
+      username,
+      password,
+      email,
+      birthday,
+      () => {
+        alert("Signup successful");
+        window.location.reload();
+      },
+      () => {
+        alert("Signup failed");
       }
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Signup successful");
-          window.location.reload();
-        } else {
-          alert("Signup failed");
-        }
-      });
+    )
   }
+      
 
   return (
     <Container style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
