@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Col, Button } from "react-bootstrap";
-import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
@@ -10,12 +9,20 @@ import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
 
 import { switchFavMovieApi } from "../../api/switch-fav-movie-api";
 
-export const MovieView = ({ user, token, movieData, onUpdateFav }) => {
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
+
+export const MovieView = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+  const movies = useSelector((state) => state.movies.movies);
+
   const { movieId } = useParams();
-  const selectedMovie = movieData.find((m) => m.id === movieId);
+  const selectedMovie = movies.find((m) => m.id === movieId);
 
   const similarMovies = useMemo(() => {
-    return movieData.filter(movie => movie.genre === selectedMovie.genre
+    return movies.filter(movie => movie.genre === selectedMovie.genre
       && movie.id !== selectedMovie.id);
   }, [selectedMovie]);
 
@@ -32,8 +39,8 @@ export const MovieView = ({ user, token, movieData, onUpdateFav }) => {
       oriFavorite,
       (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        onUpdateFav(data);
-        window.location.reload();
+        dispatch(setUser(data));
+        // window.location.reload();  //Notice: reload page will cause state missing
       },
       (error) => {
         alert(error.message)
@@ -70,13 +77,4 @@ export const MovieView = ({ user, token, movieData, onUpdateFav }) => {
       </p>
     </div>
   );
-};
-
-MovieView.propTypes = {
-  movieData: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    image: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    genre: PropTypes.string
-  }).isRequired
 };

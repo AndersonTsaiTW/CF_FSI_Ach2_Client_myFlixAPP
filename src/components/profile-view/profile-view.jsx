@@ -5,8 +5,14 @@ import { MovieCard } from "../movie-card/movie-card";
 import { deleteUserApi } from "../../api/delete-user-api";
 import { updateUserApi } from "../../api/update-user-api";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
 
-export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate }) => {
+export const ProfileView = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState();
   const [email, setEmail] = useState(user.Email);
@@ -15,7 +21,14 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate }) =
     return (date.toISOString().split('T')[0])
   });
 
+  const movies = useSelector((state) => state.movies.movies);
   const favoriteMovies = movies.filter(m => user.FavMovies.includes(m.id));
+
+  const logOut = () => {
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    localStorage.clear();
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,7 +42,7 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate }) =
       birthday,
       (data) => { // onSuccess
         localStorage.setItem("user", JSON.stringify(data));
-        onUpdate(data);
+        dispatch(setUser(data));
         window.location.reload();
       },
       (error) => { // onError
@@ -45,7 +58,7 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate }) =
         token,
         () => {
           alert("Account delete successfully!");
-          accountDeleted();
+          logOut;
         },
         () => alert("Fail to delete account.")
       );
@@ -117,11 +130,7 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate }) =
             {favoriteMovies.map((movie) => (
               <Col md={3} className="p-1 rounded" key={movie.id}>
                 <MovieCard
-                  user={user}
-                  token={token}
-                  movieData={movie}
-                  oriFavorite={user.FavMovies.includes(movie.id)}
-                  onUpdateFav={(user) => { onUpdate(user); }}
+                  movie={movie}
                 />
               </Col>
             ))}

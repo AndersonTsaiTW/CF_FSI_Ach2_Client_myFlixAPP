@@ -3,10 +3,15 @@ import { Container, Row, Col, Card, CardGroup, Form, Button } from "react-bootst
 
 import { loginUserApi } from "../../api/login-user-api";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
 
-export const LoginView = ({ onLoggedIn }) => {
+
+export const LoginView = () => {
   const [username, setUsername] = useState("AndersonTsai");
   const [password, setPassword] = useState("pass666");
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -17,7 +22,8 @@ export const LoginView = ({ onLoggedIn }) => {
       (data) => {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("token", JSON.stringify(data.token));
-        onLoggedIn(data.user, data.token);
+        dispatch(setUser(data.user));
+        dispatch(setToken(data.token));
       },
       () => {
         alert("No such user")
