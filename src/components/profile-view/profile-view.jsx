@@ -2,18 +2,24 @@ import { useState } from "react";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 
 import { MovieCard } from "../movie-card/movie-card";
+
+// Import apis: delete user and update user's informatiom
 import { deleteUserApi } from "../../api/delete-user-api";
 import { updateUserApi } from "../../api/update-user-api";
 
+// Import Redux hooks and user state action creators(
 import { useSelector, useDispatch } from "react-redux";
-import { setUser, setToken } from "../../redux/reducers/user";
+import { setUser } from "../../redux/reducers/user";
 
-export const ProfileView = () => {
+export const ProfileView = ( {logOut} ) => {
   const dispatch = useDispatch();
+
   const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
 
+  // auto-fill the original user's information to local states
   const [username, setUsername] = useState(user.Username);
+  // password can not be auto-fill because it's encrypted version in database
   const [password, setPassword] = useState();
   const [email, setEmail] = useState(user.Email);
   const [birthday, setBirthday] = useState(() => {
@@ -24,15 +30,10 @@ export const ProfileView = () => {
   const movies = useSelector((state) => state.movies.movies);
   const favoriteMovies = movies.filter(m => user.FavMovies.includes(m.id));
 
-  const logOut = () => {
-    dispatch(setUser(null));
-    dispatch(setToken(null));
-    localStorage.clear();
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // updateUserApi(oriUsername, token, username, password, email, birthday, onSuccess, onError)
     updateUserApi(
       user.Username,
       token,
@@ -43,7 +44,7 @@ export const ProfileView = () => {
       (data) => { // onSuccess
         localStorage.setItem("user", JSON.stringify(data));
         dispatch(setUser(data));
-        window.location.reload();
+        alert("Update successful");
       },
       (error) => { // onError
         alert(error.message);
@@ -53,12 +54,14 @@ export const ProfileView = () => {
 
   const handleDeregister = () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
+
+      // deleteUserApi(username, token, onSuccess, onError)
       deleteUserApi(
         user.Username,
         token,
         () => {
           alert("Account delete successfully!");
-          logOut;
+          logOut();
         },
         () => alert("Fail to delete account.")
       );
@@ -104,7 +107,6 @@ export const ProfileView = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-
               </Form.Group>
 
               <Form.Group>
@@ -116,8 +118,10 @@ export const ProfileView = () => {
                   required
                 />
               </Form.Group>
+
               <Button type="submit" className="m-1">Update</Button>
               <Button variant="danger" onClick={handleDeregister} className="m-1">Deregister</Button>
+
             </Form>
           </Card>
         </Col>
@@ -138,8 +142,6 @@ export const ProfileView = () => {
         </Col>
 
       </Row>
-
     </Container>
-
   )
 }

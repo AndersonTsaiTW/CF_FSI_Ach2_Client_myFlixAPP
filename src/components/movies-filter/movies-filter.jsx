@@ -1,11 +1,12 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Form } from "react-bootstrap";
+
+import { useSelector, useDispatch } from "react-redux";
 import { setFilter } from "../../redux/reducers/movies";
 
 export const MoviesFilter = () => {
-  const filter = useSelector((state) => state.movies.filter);
   const dispatch = useDispatch();
+  const filter = useSelector((state) => state.movies.filter);
 
   return (
     <Form.Control
@@ -13,7 +14,6 @@ export const MoviesFilter = () => {
     placeholder = "Search..."
     value={filter}
     onChange = {(e) => {
-      // console.log(e);
       dispatch(setFilter(e.target.value))}}
     />
   );

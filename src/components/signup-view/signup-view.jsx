@@ -3,14 +3,15 @@ import { Container, Card, Form, Button } from "react-bootstrap";
 import { signupUserApi } from "../../api/signup-user-api";
 
 export const SignupView = () => {
-  const [username, setUsername] = useState("AndersonTsai");
-  const [password, setPassword] = useState("pass666");
-  const [email, setEmail] = useState("AndersonTsai@example.com");
-  const [birthday, setBirthday] = useState("1987-06-10");
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [birthday, setBirthday] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // signupUserApi(username, password, email, birthday, onSuccess, onError)
     signupUserApi(
       username,
       password,
@@ -25,12 +26,13 @@ export const SignupView = () => {
       }
     )
   }
-      
 
   return (
     <Container style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
       <Card style={{ height: '300px' }}>
+        
         <Card.Header style={{ color: '#01949A' }}>Sign up! Become a movie lover!</Card.Header>
+
         <Form className="form-container" onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Label>Username: </Form.Label>
@@ -62,7 +64,6 @@ export const SignupView = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-
           </Form.Group>
 
           <Form.Group>

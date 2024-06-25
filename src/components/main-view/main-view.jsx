@@ -1,9 +1,11 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { useEffect } from "react";
+// Import Bootstrap grid components for layout design
+import { Row, Col } from "react-bootstrap";
+// Import components from React Router DOM for client-side routing
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// import { MovieCard } from "../movie-card/movie-card";
+// import components
 import { MovieList } from "../movie-list/movie-list";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -11,9 +13,12 @@ import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 
+// import api function
 import { getAllMoviesApi } from "../../api/get-all-movies-api";
 
+// Import Redux hooks for component state management
 import { useSelector, useDispatch } from "react-redux";
+// Import action creators for movies and user state in the Redux store
 import { setMovies } from "../../redux/reducers/movies";
 import { setUser, setToken } from "../../redux/reducers/user";
 
@@ -23,23 +28,25 @@ export const MainView = () => {
   const token = useSelector((state) => state.user.token);
   const movies = useSelector((state) => state.movies.movies);
 
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  const storedToken = JSON.parse(localStorage.getItem("token"));
+  // Use the useEffect hook to initialize user state upon component mount
+  // It retrieves user information and token from localStorage
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedToken = JSON.parse(localStorage.getItem("token"));
 
-  if (storedUser && storedToken) {
-    dispatch(setUser(user));
-    dispatch(setToken(token));
-  }
-  
-  // const [user, setUser] = useState(storedUser ? storedUser : null);
-  // const [token, setToken] = useState(storedToken ? storedToken : null);
-  // const [movies, setMovies] = useState([]);
+    if (storedUser && storedToken) {
+      dispatch(setUser(storedUser));
+      dispatch(setToken(storedToken));
+    }
+  }, []);
 
+  // Use the useEffect hook to initialize movies state upon component mount
   useEffect(() => {
     if (!token) {
       return;
     }
 
+    // getAllMoviesApi( token, onSuccess )
     getAllMoviesApi(
       token,
       (data) => {
@@ -57,11 +64,19 @@ export const MainView = () => {
     )
   }, [token]);
 
+  // logOut is used by NavigateBar and user deregister in ProfilView 
+  const logOut = () => {
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    localStorage.clear();
+  };
+
   return (
     <BrowserRouter>
-      <NavigationBar />
+      <NavigationBar logOut={logOut} />
       <Row>
         <Routes>
+
           <Route path="/signup" element={
             <>
               {user ? (
@@ -92,7 +107,7 @@ export const MainView = () => {
                 <Navigate to="/login" replace />
               ) : (
                 <Col className="form-container">
-                  <ProfileView />
+                  <ProfileView logOut={logOut} />
                 </Col>
               )}
             </>
@@ -119,10 +134,9 @@ export const MainView = () => {
               ) : (<MovieList />)}
             </>
           } />
-
         </Routes>
+
       </Row>
     </BrowserRouter>
-
   )
 }
