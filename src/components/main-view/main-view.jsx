@@ -3,36 +3,46 @@ import { useState, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import { MovieCard } from "../movie-card/movie-card";
+// import { MovieCard } from "../movie-card/movie-card";
+import { MovieList } from "../movie-list/movie-list";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
 
+import { getAllMoviesApi } from "../../api/get-all-movies-api";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setMovies } from "../../redux/reducers/movies";
+import { setUser, setToken } from "../../redux/reducers/user";
+
 export const MainView = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+  const movies = useSelector((state) => state.movies.movies);
+
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = JSON.parse(localStorage.getItem("token"));
-  const [user, setUser] = useState(storedUser ? storedUser : null);
-  const [token, setToken] = useState(storedToken ? storedToken : null);
-  const [movies, setMovies] = useState([]);
 
-  const logOut = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.clear();
-  };
+  if (storedUser && storedToken) {
+    dispatch(setUser(user));
+    dispatch(setToken(token));
+  }
+  
+  // const [user, setUser] = useState(storedUser ? storedUser : null);
+  // const [token, setToken] = useState(storedToken ? storedToken : null);
+  // const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     if (!token) {
       return;
     }
 
-    fetch("https://andersonmovie-fda719d938ac.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    getAllMoviesApi(
+      token,
+      (data) => {
         const moviesFromApi = data.map((rowData) => {
           return {
             id: rowData._id,
@@ -42,15 +52,14 @@ export const MainView = () => {
           }
         });
         console.log(moviesFromApi);
-        setMovies(moviesFromApi);
-      });
+        dispatch(setMovies(moviesFromApi));
+      }
+    )
   }, [token]);
 
   return (
     <BrowserRouter>
-      <NavigationBar
-        user={user}
-        onLoggedOut={logOut} />
+      <NavigationBar />
       <Row>
         <Routes>
           <Route path="/signup" element={
@@ -71,10 +80,7 @@ export const MainView = () => {
                 <Navigate to="/" />
               ) : (
                 <Col className="form-container">
-                  <LoginView onLoggedIn={(user, token) => {
-                    setUser(user);
-                    setToken(token);
-                  }} />
+                  <LoginView />
                 </Col>
               )}
             </>
@@ -86,13 +92,7 @@ export const MainView = () => {
                 <Navigate to="/login" replace />
               ) : (
                 <Col className="form-container">
-                  <ProfileView user={user} token={token}
-                    accountDeleted={logOut}
-                    movies={movies}
-                    onUpdate={(user) => {
-                      setUser(user);
-                    }}
-                  />
+                  <ProfileView />
                 </Col>
               )}
             </>
@@ -106,12 +106,7 @@ export const MainView = () => {
                 <Col>The list is empty!</Col>
               ) : (
                 <Col>
-                  <MovieView
-                    user={user}
-                    token={token}
-                    movieData={movies}
-                    onUpdateFav={(user) => { setUser(user); }}
-                  />
+                  <MovieView />
                 </Col>
               )}
             </>
@@ -121,23 +116,7 @@ export const MainView = () => {
             <>
               {!user ? (
                 <Navigate to="/login" replace />
-              ) : (movies.length === 0) ? (
-                <Col>The list is empty!</Col>
-              ) : (
-                <Row className="justify-content-center">
-                  {movies.map((movie) => (
-                    <Col md={2} className="m-1 p-1 rounded" key={movie.id}>
-                      <MovieCard
-                        user={user}
-                        token={token}
-                        movieData={movie}
-                        oriFavorite={user.FavMovies.includes(movie.id)}
-                        onUpdateFav={(user) => { setUser(user); }}
-                      />
-                    </Col>
-                  ))}
-                </Row>
-              )}
+              ) : (<MovieList />)}
             </>
           } />
 

@@ -2,8 +2,17 @@ import { useState } from "react";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 
 import { MovieCard } from "../movie-card/movie-card";
+import { deleteUserApi } from "../../api/delete-user-api";
+import { updateUserApi } from "../../api/update-user-api";
 
-export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate}) => {
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
+
+export const ProfileView = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState();
   const [email, setEmail] = useState(user.Email);
@@ -12,58 +21,47 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate}) =>
     return (date.toISOString().split('T')[0])
   });
 
+  const movies = useSelector((state) => state.movies.movies);
   const favoriteMovies = movies.filter(m => user.FavMovies.includes(m.id));
+
+  const logOut = () => {
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    localStorage.clear();
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birth_date: birthday
-    };
-
-    fetch(`https://andersonmovie-fda719d938ac.herokuapp.com/users/${encodeURIComponent(user.Username)}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Profile update failed');
-        }
-        return response.json();
-      })
-      .then((data) => {
+    updateUserApi(
+      user.Username,
+      token,
+      username,
+      password,
+      email,
+      birthday,
+      (data) => { // onSuccess
         localStorage.setItem("user", JSON.stringify(data));
-        onUpdate(data);
+        dispatch(setUser(data));
         window.location.reload();
-      })
-      .catch((error) => {
+      },
+      (error) => { // onError
         alert(error.message);
-      });
+      }
+    );
   }
 
   const handleDeregister = () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
-      fetch(`https://andersonmovie-fda719d938ac.herokuapp.com/users/${encodeURIComponent(user.Username)}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then((response) => {
-          if (response.ok) {
-            alert("Account delete successfully!");
-            accountDeleted();
-          } else {
-            alert("Fail to delete account.");
-          }
-        });
+      deleteUserApi(
+        user.Username,
+        token,
+        () => {
+          alert("Account delete successfully!");
+          logOut;
+        },
+        () => alert("Fail to delete account.")
+      );
     }
   }
 
@@ -132,11 +130,7 @@ export const ProfileView = ({ user, token, accountDeleted, movies, onUpdate}) =>
             {favoriteMovies.map((movie) => (
               <Col md={3} className="p-1 rounded" key={movie.id}>
                 <MovieCard
-                user={user}
-                token={token}
-                movieData={movie}
-                oriFavorite={user.FavMovies.includes(movie.id)}
-                onUpdateFav = {(user) => {onUpdate(user);}}
+                  movie={movie}
                 />
               </Col>
             ))}

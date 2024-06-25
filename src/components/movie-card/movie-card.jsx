@@ -1,5 +1,4 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -7,46 +6,46 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
 
-export const MovieCard = ({ user, token, movieData, oriFavorite, onUpdateFav }) => {
+import { switchFavMovieApi } from "../../api/switch-fav-movie-api";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
+
+export const MovieCard = ({ movie }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+  const oriFavorite= user.FavMovies.includes(movie.id);
+
   const [isFavorite, setIsFavorite] = useState(oriFavorite);
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
 
-    const url = `https://andersonmovie-fda719d938ac.herokuapp.com/users/${encodeURIComponent(user.Username)}/movies/${encodeURIComponent(movieData.id)}`;
-
-    // if oriFavorite = False: from False => True
-    // add the movie in FavMovies and update user
-    const method = oriFavorite ? "DELETE" : "POST";
-
-    fetch(url, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }})
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Fail to ${oriFavorite ? 'delete' : 'add'} favorite movie`);
-        }
-        return response.json();
-      })
-      .then((data) => {
+    switchFavMovieApi(
+      user.Username,
+      token,
+      movie.id,
+      oriFavorite,
+      (data) => {
+        console.log(data);
         localStorage.setItem("user", JSON.stringify(data));
-        onUpdateFav(data);
-        window.location.reload();
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+        dispatch(setUser(data));
+        // window.location.reload(); //Notice: reload page will cause state missing
+      },
+      (error) => {
+        alert(error.message)
+      }
+    )
   }
 
   return (
     <Card className="h-100">
-      <Card.Img variant="top" src={movieData.image} />
+      <Card.Img variant="top" src={movie.image} />
       <Card.Body>
-        <Card.Title>{movieData.title}</Card.Title>
-        <Card.Text>{movieData.genre}</Card.Text>
-        <Link to={`/movies/${encodeURIComponent(movieData.id)}`} >
+        <Card.Title>{movie.title}</Card.Title>
+        <Card.Text>{movie.genre}</Card.Text>
+        <Link to={`/movies/${encodeURIComponent(movie.id)}`} >
           <Button variant="outline-primary">Open</Button>
         </Link>
 
@@ -56,13 +55,4 @@ export const MovieCard = ({ user, token, movieData, oriFavorite, onUpdateFav }) 
       </Card.Body>
     </Card>
   )
-};
-
-MovieCard.propTypes = {
-  movieData: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    image: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    genre: PropTypes.string
-  }).isRequired,
 };

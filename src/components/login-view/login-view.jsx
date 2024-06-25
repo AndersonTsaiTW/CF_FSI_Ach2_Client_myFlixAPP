@@ -1,42 +1,38 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardGroup, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+
+import { loginUserApi } from "../../api/login-user-api";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
 
 
-export const LoginView = ({ onLoggedIn }) => {
+export const LoginView = () => {
   const [username, setUsername] = useState("AndersonTsai");
   const [password, setPassword] = useState("pass666");
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      Username: username,
-      Password: password
-    };
-
-    fetch("https://andersonmovie-fda719d938ac.herokuapp.com/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+    loginUserApi(
+      username,
+      password,
+      (data) => {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", JSON.stringify(data.token));
+        dispatch(setUser(data.user));
+        dispatch(setToken(data.token));
       },
-      body: JSON.stringify(data)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Login response: ", data);
-        if (data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-          localStorage.setItem("token", JSON.stringify(data.token));
-          onLoggedIn(data.user, data.token);
-        } else {
-          alert("No such user");
-        }
-      })
-      .catch((e) => {
+      () => {
+        alert("No such user")
+      },
+      () => {
         console.error("Login error: ", e);
         alert("Something went wrong");
-      });
+      }
+    )
   }
 
   return (
