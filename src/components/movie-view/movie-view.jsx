@@ -32,6 +32,8 @@ export const MovieView = () => {
   // Retrieve the specific movie from the list using the extracted movie ID
   const selectedMovie = movies.find((m) => m.id === movieId);
 
+  console.log(selectedMovie);
+
   // Filter the similar movies by genre
   const similarMovies = useMemo(() => {
     return movies.filter(movie => movie.genre.Name === selectedMovie.genre.Name
@@ -106,10 +108,17 @@ export const MovieView = () => {
                   </Tooltip>
                 }
               >
-                <span style={{ textDecoration: "underline", cursor: "pointer" }}>
-                  {selectedMovie.director.Name}
-                </span>
+
+                <Link to={`/movies/directors/${encodeURIComponent(selectedMovie.director.Name)}`} >
+                  <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+                    {selectedMovie.director.Name}
+                  </span>
+                </Link>
+
               </OverlayTrigger>
+
+
+
               <span>  // Actors: {selectedMovie.actors.join(", ")}</span>
             </h5>
             <p className="black-text">{selectedMovie.description}</p>
