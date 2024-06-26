@@ -6,6 +6,10 @@ $color: steelblue;
   color: $color;
 }
 
+.black-text {
+  color: black;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -18,7 +22,40 @@ $color: steelblue;
   font-weight: bold;
 }
 
+.movie-card-image {
+  height: 300px;
+  object-fit: cover; 
+}
+
 .movie-view-image {
-  width: 300px;
-  height: auto;
+  width:30vw;
+  object-fit: cover; 
+}
+
+.text-limited {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; // limit the showing lines
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; // use ellipsis to present hidden lines
+}
+
+.heart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding-left: 8px;
+}
+
+.full-height-col {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.flex-row {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
 }

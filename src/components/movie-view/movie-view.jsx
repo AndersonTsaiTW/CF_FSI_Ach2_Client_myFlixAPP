@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 
 import { Link } from "react-router-dom";
-import { Col, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 
 // Import FontAwesome icons to represent whether a movie is in the user's favorites list
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -64,33 +64,52 @@ export const MovieView = () => {
   }
 
   return (
-    <div>
-      <div>
-        <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
-      </div>
-      <div>
-        <span>Title: {selectedMovie.title}</span>
-      </div>
-      <div>
-        <span>Genre: {selectedMovie.genre}</span>
-      </div>
-      
-      <Button variant="outline-primary" onClick={handleFavoriteClick}>
-        <FontAwesomeIcon icon={isFavorite ? fasHeart : farHeart} />
-      </Button>
+    <Row>
 
-      <p>
-        <br></br>
-        <h2>{`Other ${selectedMovie.genre} Movies`}</h2>
-        {similarMovies.length > 0 ? (
-          similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
-        ) : (
-          <Col>There is no similar movie.</Col>
-        )}
-        <Link to="/" >
-          <Button variant="secondary">Back</Button>
-        </Link>
-      </p>
-    </div>
+      <Col md={5} className="full-height-col">
+        <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
+      </Col>
+
+      <Col className="full-height-col">
+        <Row className="flex-row">
+          <div>
+            <div style={{ width: 'auto', maxWidth: '40px' }}>
+              <Button variant="outline-primary" onClick={handleFavoriteClick} className="button-icon">
+                <FontAwesomeIcon icon={isFavorite ? fasHeart : farHeart} />
+              </Button>
+            </div>
+
+            <h2>{selectedMovie.title}</h2>
+            <h5>
+              Genre: {selectedMovie.genre}  // 
+              Release Year: {selectedMovie.releaseYear}
+            </h5>
+            <h5>
+              Director: {selectedMovie.director.Name}  // 
+              Actors: {selectedMovie.actors.join(", ")}
+            </h5>
+            <p className="black-text">{selectedMovie.description}</p>
+          </div>
+        </Row>
+
+        <Row className="flex-row">
+          <p>
+            <br></br>
+            <h2>{`Other ${selectedMovie.genre} Movies`}</h2>
+            {similarMovies.length > 0 ? (
+              similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
+            ) : (
+              <Col>There is no similar movie.</Col>
+            )}
+            <Link to="/" >
+              <Button variant="secondary">Back</Button>
+            </Link>
+          </p>
+        </Row>
+
+      </Col>
+
+    </Row>
+
   );
 };

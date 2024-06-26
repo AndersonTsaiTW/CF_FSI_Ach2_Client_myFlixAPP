@@ -32,7 +32,7 @@ export const MovieList = () => {
             <Col>The list is empty!</Col>
           ) : (
             filteredMovies.map((movie) => (
-              <Col md={2} className="m-1 p-1 rounded" key={movie.id}>
+              <Col md={3} className="m-0.5 p-1 rounded" key={movie.id}>
                 <MovieCard movie={movie} />
               </Col>
             )))

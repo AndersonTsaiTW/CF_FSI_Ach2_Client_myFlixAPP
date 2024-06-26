@@ -13195,6 +13195,10 @@ textarea.form-control-lg {
   color: #4682b4;
 }
 
+.black-text {
+  color: #000;
+}
+
 .form-container {
   flex-direction: column;
   justify-content: space-between;
@@ -13207,9 +13211,42 @@ textarea.form-control-lg {
   font-weight: bold;
 }
 
+.movie-card-image {
+  object-fit: cover;
+  height: 300px;
+}
+
 .movie-view-image {
-  width: 300px;
-  height: auto;
+  object-fit: cover;
+  width: 30vw;
+}
+
+.text-limited {
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.heart-icon {
+  justify-content: start;
+  align-items: center;
+  padding-left: 8px;
+  display: flex;
+}
+
+.full-height-col {
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: column;
+  flex: 1;
+  justify-content: start;
+  display: flex;
 }
 
 /*# sourceMappingURL=index.ce1d6491.css.map */
