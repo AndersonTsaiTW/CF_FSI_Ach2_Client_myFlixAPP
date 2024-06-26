@@ -13206,6 +13206,11 @@ textarea.form-control-lg {
   display: flex;
 }
 
+.sort-select {
+  color: #fff;
+  background-color: #1a64a0;
+}
+
 .card-header {
   color: #01949a;
   font-weight: bold;

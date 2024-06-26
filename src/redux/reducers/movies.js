@@ -6,7 +6,8 @@ export const moviesSlice = createSlice({
   name: "movies",
   initialState: {
     movies: [],
-    filter: ""
+    filter: "",
+    sortKey: "title"
   },
   reducers: {
     setMovies: ( state, action ) => {
@@ -14,9 +15,12 @@ export const moviesSlice = createSlice({
     },
     setFilter: ( state, action ) => {
       state.filter = action.payload;
+    },
+    setSortKey: ( state, action ) => {
+      state.sortKey = action.payload;
     }
   }
 })
 
-export const { setMovies, setFilter } = moviesSlice.actions;
+export const { setMovies, setFilter, setSortKey } = moviesSlice.actions;
 export default moviesSlice.reducer;
