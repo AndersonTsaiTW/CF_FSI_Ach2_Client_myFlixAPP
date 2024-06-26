@@ -148,7 +148,7 @@ export const MainView = () => {
 
           <Route path="/" element={
             <>
-              {!user ? (
+              {(!user || !movies) ? (
                 <Navigate to="/login" replace />
               ) : (<MovieList />)}
             </>
