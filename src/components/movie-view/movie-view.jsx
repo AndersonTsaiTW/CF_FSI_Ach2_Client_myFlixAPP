@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 
 import { Link } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 // Import FontAwesome icons to represent whether a movie is in the user's favorites list
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,7 +34,7 @@ export const MovieView = () => {
 
   // Filter the similar movies by genre
   const similarMovies = useMemo(() => {
-    return movies.filter(movie => movie.genre === selectedMovie.genre
+    return movies.filter(movie => movie.genre.Name === selectedMovie.genre.Name
       && movie.id !== selectedMovie.id);
   }, [selectedMovie]);
 
@@ -81,12 +81,36 @@ export const MovieView = () => {
 
             <h2>{selectedMovie.title}</h2>
             <h5>
-              Genre: {selectedMovie.genre}  // 
-              Release Year: {selectedMovie.releaseYear}
+              <span>Genre: </span>
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Tooltip id={`tooltip-right`}>
+                    {selectedMovie.genre.Description}
+                  </Tooltip>
+                }
+              >
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+                  {selectedMovie.genre.Name}
+                </span>
+              </OverlayTrigger>
+              <span>  //  Release Year: {selectedMovie.releaseYear}</span>
             </h5>
             <h5>
-              Director: {selectedMovie.director.Name}  // 
-              Actors: {selectedMovie.actors.join(", ")}
+              <span>Director: </span>
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Tooltip id={`tooltip-right`}>
+                    {selectedMovie.director.Bio}
+                  </Tooltip>
+                }
+              >
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+                  {selectedMovie.director.Name}
+                </span>
+              </OverlayTrigger>
+              <span>  // Actors: {selectedMovie.actors.join(", ")}</span>
             </h5>
             <p className="black-text">{selectedMovie.description}</p>
           </div>
@@ -95,7 +119,7 @@ export const MovieView = () => {
         <Row className="flex-row">
           <p>
             <br></br>
-            <h2>{`Other ${selectedMovie.genre} Movies`}</h2>
+            <h2>{`Other ${selectedMovie.genre.Name} Movies`}</h2>
             {similarMovies.length > 0 ? (
               similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
             ) : (

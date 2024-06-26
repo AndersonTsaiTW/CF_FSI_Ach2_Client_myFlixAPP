@@ -55,7 +55,7 @@ export const MainView = () => {
             id: rowData._id,
             title: rowData.Title,
             image: rowData.ImagePath,
-            genre: rowData.Genre.Name,
+            genre: rowData.Genre,
             description: rowData.Description,
             releaseYear: rowData.ReleaseYear,
             director: rowData.Director,
