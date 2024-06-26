@@ -71,8 +71,8 @@ export const MovieView = () => {
       <Col md={5} className="full-height-col">
         <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
       </Col>
-
-      <Col className="full-height-col">
+      <Col md={2}></Col>
+      <Col md={5} className="full-height-col">
         <Row className="flex-row">
           <div>
             <div style={{ width: 'auto', maxWidth: '40px' }}>

@@ -19,7 +19,7 @@ export const MovieList = () => {
 
   // Filter movies based on the search term in 'filter' to get the filtered movies list
   const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(filter));
+    (movie.title + movie.genre.Name + movie.director.Name).toLowerCase().includes(filter));
 
   // Because data has layer structure, use the function below to support sortedFilterMovies
   function getValueByPath(obj, path) {

@@ -21,10 +21,10 @@ export const MoviesSorter = () => {
         defaultValue="default"
         className="sort-select">
           <option value="default" disabled>Click here to sort</option>
-          <option value="title">Title</option>
-          <option value="releaseYear">Release Year</option>
-          <option value="genre.Name">Genre</option>
-          <option value="director.Name">Director</option>
+          <option value="title">sort by Title</option>
+          <option value="releaseYear">sort by Release Year</option>
+          <option value="genre.Name">sort by Genre</option>
+          <option value="director.Name">sort by Director</option>
         </Form.Control>
       </Form.Group>
     </Form>

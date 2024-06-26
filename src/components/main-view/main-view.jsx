@@ -71,9 +71,11 @@ export const MainView = () => {
 
   // logOut is used by NavigateBar and user deregister in ProfilView 
   const logOut = () => {
-    dispatch(setUser(null));
-    dispatch(setToken(null));
-    localStorage.clear();
+    if (window.confirm("Are you sure you want to log out?")) {
+      dispatch(setUser(null));
+      dispatch(setToken(null));
+      localStorage.clear();
+    }
   };
 
   return (
