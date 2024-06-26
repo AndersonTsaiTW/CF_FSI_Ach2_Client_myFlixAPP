@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 
 import { Link } from "react-router-dom";
-import { Col, Button } from "react-bootstrap";
+import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 // Import FontAwesome icons to represent whether a movie is in the user's favorites list
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,9 +32,11 @@ export const MovieView = () => {
   // Retrieve the specific movie from the list using the extracted movie ID
   const selectedMovie = movies.find((m) => m.id === movieId);
 
+  console.log(selectedMovie);
+
   // Filter the similar movies by genre
   const similarMovies = useMemo(() => {
-    return movies.filter(movie => movie.genre === selectedMovie.genre
+    return movies.filter(movie => movie.genre.Name === selectedMovie.genre.Name
       && movie.id !== selectedMovie.id);
   }, [selectedMovie]);
 
@@ -64,33 +66,83 @@ export const MovieView = () => {
   }
 
   return (
-    <div>
-      <div>
-        <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
-      </div>
-      <div>
-        <span>Title: {selectedMovie.title}</span>
-      </div>
-      <div>
-        <span>Genre: {selectedMovie.genre}</span>
-      </div>
-      
-      <Button variant="outline-primary" onClick={handleFavoriteClick}>
-        <FontAwesomeIcon icon={isFavorite ? fasHeart : farHeart} />
-      </Button>
+    <Row>
 
-      <p>
-        <br></br>
-        <h2>{`Other ${selectedMovie.genre} Movies`}</h2>
-        {similarMovies.length > 0 ? (
-          similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
-        ) : (
-          <Col>There is no similar movie.</Col>
-        )}
-        <Link to="/" >
-          <Button variant="secondary">Back</Button>
-        </Link>
-      </p>
-    </div>
+      <Col md={5} className="full-height-col">
+        <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
+      </Col>
+
+      <Col className="full-height-col">
+        <Row className="flex-row">
+          <div>
+            <div style={{ width: 'auto', maxWidth: '40px' }}>
+              <Button variant="outline-primary" onClick={handleFavoriteClick} className="button-icon">
+                <FontAwesomeIcon icon={isFavorite ? fasHeart : farHeart} />
+              </Button>
+            </div>
+
+            <h2>{selectedMovie.title}</h2>
+            <h5>
+              <span>Genre: </span>
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Tooltip id={`tooltip-right`}>
+                    {selectedMovie.genre.Description}
+                  </Tooltip>
+                }
+              >
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+                  {selectedMovie.genre.Name}
+                </span>
+              </OverlayTrigger>
+              <span>  //  Release Year: {selectedMovie.releaseYear}</span>
+            </h5>
+            <h5>
+              <span>Director: </span>
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Tooltip id={`tooltip-right`}>
+                    {selectedMovie.director.Bio}
+                  </Tooltip>
+                }
+              >
+
+                <Link to={`/movies/directors/${encodeURIComponent(selectedMovie.director.Name)}`} >
+                  <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+                    {selectedMovie.director.Name}
+                  </span>
+                </Link>
+
+              </OverlayTrigger>
+
+
+
+              <span>  // Actors: {selectedMovie.actors.join(", ")}</span>
+            </h5>
+            <p className="black-text">{selectedMovie.description}</p>
+          </div>
+        </Row>
+
+        <Row className="flex-row">
+          <p>
+            <br></br>
+            <h2>{`Other ${selectedMovie.genre.Name} Movies`}</h2>
+            {similarMovies.length > 0 ? (
+              similarMovies.map((movie) => <li key={movie.id}>{movie.title}</li>)
+            ) : (
+              <Col>There is no similar movie.</Col>
+            )}
+            <Link to="/" >
+              <Button variant="secondary">Back</Button>
+            </Link>
+          </p>
+        </Row>
+
+      </Col>
+
+    </Row>
+
   );
 };

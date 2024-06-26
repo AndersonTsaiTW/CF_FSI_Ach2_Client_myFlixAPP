@@ -12,6 +12,7 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view";
+import { DirectorView } from "../director-view/director-view";
 
 // import api function
 import { getAllMoviesApi } from "../../api/get-all-movies-api";
@@ -55,7 +56,11 @@ export const MainView = () => {
             id: rowData._id,
             title: rowData.Title,
             image: rowData.ImagePath,
-            genre: rowData.Genre.Name
+            genre: rowData.Genre,
+            description: rowData.Description,
+            releaseYear: rowData.ReleaseYear,
+            director: rowData.Director,
+            actors: rowData.Actors
           }
         });
         console.log(moviesFromApi);
@@ -122,6 +127,20 @@ export const MainView = () => {
               ) : (
                 <Col>
                   <MovieView />
+                </Col>
+              )}
+            </>
+          } />
+
+          <Route path="movies/directors/:directorname" element={
+            <>
+              {!user ? (
+                <Navigate to="/login" replace />
+              ) : (movies.length === 0) ? (
+                <Col>The list is empty!</Col>
+              ) : (
+                <Col>
+                  <DirectorView />
                 </Col>
               )}
             </>
