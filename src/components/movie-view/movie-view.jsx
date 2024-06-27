@@ -71,8 +71,8 @@ export const MovieView = () => {
       <Col md={5} className="full-height-col">
         <img className="movie-view-image" src={selectedMovie.image} alt={selectedMovie.title} />
       </Col>
-      <Col md={2}></Col>
-      <Col md={5} className="full-height-col">
+      <Col md={1}></Col>
+      <Col md={6} className="full-height-col">
         <Row className="flex-row">
           <div>
             <div style={{ width: 'auto', maxWidth: '40px' }}>
@@ -96,7 +96,9 @@ export const MovieView = () => {
                   {selectedMovie.genre.Name}
                 </span>
               </OverlayTrigger>
-              <span>  //  Release Year: {selectedMovie.releaseYear}</span>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;
+                Release Year: {selectedMovie.releaseYear}
+                </span>
             </h5>
             <h5>
               <span>Director: </span>
@@ -116,10 +118,9 @@ export const MovieView = () => {
                 </Link>
 
               </OverlayTrigger>
-
-
-
-              <span>  // Actors: {selectedMovie.actors.join(", ")}</span>
+            </h5>
+            <h5>
+              <span>Actors: {selectedMovie.actors.join(", ")}</span>
             </h5>
             <p className="black-text">{selectedMovie.description}</p>
           </div>

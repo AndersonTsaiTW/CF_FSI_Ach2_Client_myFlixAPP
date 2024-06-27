@@ -13223,7 +13223,7 @@ textarea.form-control-lg {
 
 .movie-view-image {
   object-fit: cover;
-  width: 30vw;
+  width: 100%;
 }
 
 .text-limited {
