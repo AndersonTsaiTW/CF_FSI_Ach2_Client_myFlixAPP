@@ -12,8 +12,8 @@ This movie website allows users to navigate through movie details extensively. I
   - Supports basic account management: registration, login, profile updates, and account deletion.
   - Allows users to manage their favorites list by adding or removing movies.
 
-  <img src="https://github.com/AndersonTsaiTW/CF_FSI_Ach3_Client_myFlixAPP/assets/113076298/8181ba14-2c78-4dca-b58f-8fc1dca63bc6" width="auto" height="270" alt="This is the main view in this website which shows movies.">
-  <img src="https://github.com/AndersonTsaiTW/CF_FSI_Ach3_Client_myFlixAPP/assets/113076298/d634a498-bf84-4f62-8f8a-993a80f0ef50" width="auto" height="270" alt="This is the profile view where user can update their information, deregister, and see their favourite movies.">
+  <img src="https://github.com/AndersonTsaiTW/CF_FSI_Ach3_Client_myFlixAPP/assets/113076298/8181ba14-2c78-4dca-b58f-8fc1dca63bc6" width="45%" height="auto" alt="This is the main view in this website which shows movies.">
+  <img src="https://github.com/AndersonTsaiTW/CF_FSI_Ach3_Client_myFlixAPP/assets/113076298/d634a498-bf84-4f62-8f8a-993a80f0ef50" width="45%" height="auto" alt="This is the profile view where user can update their information, deregister, and see their favourite movies.">
 *Note: The website is designed for practicing and showcasing web development skills, featuring a limited selection of movies. Data accuracy may vary.*
 
 ## Important Tools
