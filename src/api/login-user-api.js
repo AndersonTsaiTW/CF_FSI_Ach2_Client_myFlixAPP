@@ -21,6 +21,6 @@ export function loginUserApi(username, password, onSuccess, onNoUser, onError) {
       }
     })
     .catch((e) => {
-      onError();
+      onError(e);
     });
 }

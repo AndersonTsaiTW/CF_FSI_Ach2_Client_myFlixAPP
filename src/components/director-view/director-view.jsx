@@ -5,7 +5,6 @@ import { Row, Col } from "react-bootstrap";
 
 import { MovieCard } from "../movie-card/movie-card";
 
-
 export const DirectorView = () => {
   const movies = useSelector((state) => state.movies.movies);
 

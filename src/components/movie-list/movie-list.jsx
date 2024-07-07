@@ -17,7 +17,7 @@ export const MovieList = () => {
   const filter = useSelector((state) =>
     state.movies.filter).trim().toLowerCase();
 
-  // Filter movies based on the search term in 'filter' to get the filtered movies list
+  // Filter movies
   const filteredMovies = movies.filter((movie) =>
     (movie.title + movie.genre.Name + movie.director.Name).toLowerCase().includes(filter));
 

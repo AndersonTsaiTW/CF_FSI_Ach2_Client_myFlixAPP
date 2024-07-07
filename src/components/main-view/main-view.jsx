@@ -1,8 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
-// Import Bootstrap grid components for layout design
+
 import { Row, Col } from "react-bootstrap";
-// Import components from React Router DOM for client-side routing
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // import components
@@ -17,9 +16,8 @@ import { DirectorView } from "../director-view/director-view";
 // import api function
 import { getAllMoviesApi } from "../../api/get-all-movies-api";
 
-// Import Redux hooks for component state management
+// Import Redux hooks and action creators
 import { useSelector, useDispatch } from "react-redux";
-// Import action creators for movies and user state in the Redux store
 import { setMovies } from "../../redux/reducers/movies";
 import { setUser, setToken } from "../../redux/reducers/user";
 

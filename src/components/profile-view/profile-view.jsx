@@ -3,15 +3,13 @@ import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 
 import { MovieCard } from "../movie-card/movie-card";
 
-// Import apis: delete user and update user's informatiom
 import { deleteUserApi } from "../../api/delete-user-api";
 import { updateUserApi } from "../../api/update-user-api";
 
-// Import Redux hooks and user state action creators(
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/reducers/user";
 
-export const ProfileView = ( {logOut} ) => {
+export const ProfileView = ({ logOut }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.user);

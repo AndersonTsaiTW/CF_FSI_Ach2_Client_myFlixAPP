@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Container, Card, Form, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setUser, setToken } from "../../redux/reducers/user";
+
 import { signupUserApi } from "../../api/signup-user-api";
+import { loginUserApi } from '../../api/login-user-api';
 
 export const SignupView = () => {
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [email, setEmail] = useState(null);
@@ -18,8 +24,27 @@ export const SignupView = () => {
       email,
       birthday,
       () => {
-        alert("Signup successful");
-        window.location.reload();
+        alert("Signup successful, Login directly...");
+
+        // login directly
+        loginUserApi(
+          username,
+          password,
+          (data) => {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("token", JSON.stringify(data.token));
+            dispatch(setUser(data.user));
+            dispatch(setToken(data.token));
+            window.location.href = '/';
+          },
+          () => {
+            alert("No such user")
+          },
+          (e) => {
+            console.error("Login error: ", e);
+            alert("Something went wrong");
+          }
+        )
       },
       () => {
         alert("Signup failed");
@@ -30,7 +55,7 @@ export const SignupView = () => {
   return (
     <Container style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
       <Card style={{ height: '300px' }}>
-        
+
         <Card.Header style={{ color: '#01949A' }}>Sign up! Become a movie lover!</Card.Header>
 
         <Form className="form-container" onSubmit={handleSubmit}>

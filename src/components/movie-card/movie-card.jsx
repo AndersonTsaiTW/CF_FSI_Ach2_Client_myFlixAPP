@@ -7,10 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
 
-// import api function
 import { switchFavMovieApi } from "../../api/switch-fav-movie-api";
 
-// Import Redux hooks and user state action creators
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/reducers/user";
 
@@ -18,7 +16,6 @@ import { setUser } from "../../redux/reducers/user";
 export const MovieCard = ({ movie }) => {
   const dispatch = useDispatch();
 
-  // Retrieve user and token from the Redux store's user state
   const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
 
@@ -51,7 +48,7 @@ export const MovieCard = ({ movie }) => {
 
   return (
     <Card className="h-100">
-      <Card.Img variant="top" src={movie.image} className="movie-card-image"/>
+      <Card.Img variant="top" src={movie.image} className="movie-card-image" />
       <Card.Body>
         <Card.Title>{movie.title}</Card.Title>
         <Card.Text className="text-limited">{movie.description}</Card.Text>

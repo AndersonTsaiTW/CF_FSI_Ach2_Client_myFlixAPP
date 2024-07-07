@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardGroup, Form, Button } from "react-bootstrap";
 
-// import api function
 import { loginUserApi } from "../../api/login-user-api";
 
-// Import Redux dispatch hook and user state action creators
 import { useDispatch } from "react-redux";
 import { setUser, setToken } from "../../redux/reducers/user";
 
@@ -31,7 +29,7 @@ export const LoginView = () => {
       () => {
         alert("No such user")
       },
-      () => {
+      (e) => {
         console.error("Login error: ", e);
         alert("Something went wrong");
       }

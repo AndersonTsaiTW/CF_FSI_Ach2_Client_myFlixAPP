@@ -11,10 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
 
-// Import api
 import { switchFavMovieApi } from "../../api/switch-fav-movie-api";
 
-// Import Redux hooks and user state action creators
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/reducers/user";
 
@@ -22,14 +20,13 @@ export const MovieView = () => {
   const dispatch = useDispatch();
 
   // Set the loacl states
+  // store favorite will change user.favList
   const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
   const movies = useSelector((state) => state.movies.movies);
 
-  // Extract the movie ID from the URL parameters
+  // Extract the movie ID from the URL parameters and get it
   const { movieId } = useParams();
-
-  // Retrieve the specific movie from the list using the extracted movie ID
   const selectedMovie = movies.find((m) => m.id === movieId);
 
   console.log(selectedMovie);
@@ -40,9 +37,8 @@ export const MovieView = () => {
       && movie.id !== selectedMovie.id);
   }, [selectedMovie]);
 
-  // Determine if the movie is initially in the user's favorite list
+  // Determine if the movie is initially in the user's favorite list and set local state
   const oriFavorite = user.FavMovies.includes(movieId);
-  // State to track if the movie is currently marked as favorite
   const [isFavorite, setIsFavorite] = useState(oriFavorite);
 
   const handleFavoriteClick = () => {
@@ -98,7 +94,7 @@ export const MovieView = () => {
               </OverlayTrigger>
               <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;
                 Release Year: {selectedMovie.releaseYear}
-                </span>
+              </span>
             </h5>
             <h5>
               <span>Director: </span>
